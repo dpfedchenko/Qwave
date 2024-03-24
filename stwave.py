@@ -11,7 +11,7 @@ h = 0.1
 #!#
 
 # Build
-N = 1.5
+N = 2.5
 #!#
 
 # Plot
@@ -20,13 +20,22 @@ x = np.arange(0, N*DPi, h)
 rline, = ax.plot(x, np.exp(I * x))
 lline, = ax.plot(x, np.exp(I * x), color = 'red')
 sline, = ax.plot(x, np.exp(I * x) + np.exp(-I * x),
-                 color = 'green')
+                 color = 'green',
+                 linewidth = 3)
 def animate(i):
-    A = 1#np.cos(i/50)
-    B = 1#np.sin(i/50)
-    rline.set_ydata(A*np.exp(I*(x - i/50)))  # update the data.
-    lline.set_ydata(B*np.exp(I*(x + i/50)))  # update the data.
-    sline.set_ydata(A*np.exp(I*(x - i/50)) + B*np.exp(I*(x + i/50)))  # update the data.
+    # k-vectors
+    kr = 50
+    kl = 50
+
+    # Amplitudes
+    Ar = 1#np.cos(i/50)
+    Al = 1#np.sin(i/50)
+
+    rline.set_ydata(Ar*np.exp(I*(x - i/kr)))
+    lline.set_ydata(Al*np.exp(I*(x + i/kl)))
+
+    sline.set_ydata(Ar*np.exp(I*(x - i/kr)) + Al*np.exp(I*(x + i/kl)))
+    
     return rline, lline, sline
 
 ani = animation.FuncAnimation(
