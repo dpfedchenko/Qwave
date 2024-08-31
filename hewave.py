@@ -3,36 +3,31 @@ import numpy as np
 
 import matplotlib.animation as animation
 
-# Functions and Constants
-DPi = 2 * np.pi
-N = 5
-NPi = N * np.pi
-#!#
+# Fixing random state for reproducibility
 
-# Build
+def random_walk(num_steps, max_step=0.05):
+    start_pos = np.random.random(3)
+    steps = np.random.uniform(-max_step, max_step, size=(num_steps, 3))
+    walk = start_pos + np.cumsum(steps, axis=0)
+    return walk
 
-#!#
+def update_lines(num, walks, lines):
+    for line, walk in zip(lines, walks):
+        line.set_data_3d(walk[:num, :].T)
+    return lines
 
-# Plot
+num_steps = 30
+walks = [random_walk(num_steps) for index in range(2)]
+
+# Attaching 3D axis to the figure
 fig = plt.figure()
-ax = fig.add_subplot(projection='3d')
+ax = fig.add_subplot(projection="3d")
 
-# Prepare arrays x, y, z
-##k = np.linspace(0, 1, 100)
+# Create lines initially without data
+lines = [ax.plot([], [], [])[0] for _ in walks]
 
-rheli, = ax.plot([],[],[], color = 'red')
-lheli, = ax.plot([],[],[], color = 'blue')
-
-def update(i):
-    k = np.linspace(0, 1, 100)
-    rheli = ax.plot(k, np.cos(k*NPi - i/10), np.sin(k*NPi - i/10), color = 'red')
-    lheli = ax.plot(k, np.cos(k*NPi + i/10), np.sin(k*NPi + i/10), color = 'blue')
-    return rheli, lheli
-
+# Creating the Animation object
 ani = animation.FuncAnimation(
-    fig,
-    update,
-    blit = True, save_count=10)
+    fig, update_lines, num_steps, fargs=(walks, lines), interval=100)
 
 plt.show()
-#!#
